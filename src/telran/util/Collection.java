@@ -10,8 +10,6 @@ public interface Collection<T> extends Iterable <T>
 	boolean remove(Object pattern);
 	int size();
 	
-	
-	
 	default void clear()
 	{
 		removeIf(n->true);
@@ -62,7 +60,6 @@ public interface Collection<T> extends Iterable <T>
 		return res;
 	}
 	
-
 	default public boolean removeIf(Predicate<T> predicate) {
 		Iterator<T> it = iterator();
 		int oldSize = size();

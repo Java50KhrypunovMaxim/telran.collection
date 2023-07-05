@@ -61,14 +61,31 @@ public class ArrayList<T> implements List<T> {
    @Override
  //TODO try to rewrite method removeIf with complexity O[N]
    public boolean removeIf(Predicate<T> predicate) {
-	   int newSize = size;
-	    for (int i = size - 1; i >= 0; i--) {
-	        if (predicate.test(array[i])) {
-	            remove(i);
+	   T[] newArray = Arrays.copyOf(array, size);
+	    int newSize = size;
+	    int index = 0; 
+	    for (int i = 0; i < size; i++) {
+	        if (!predicate.test(array[i])) {
+	            newArray[index++] = array[i]; 
+	        } else {
+	            newSize--; 
 	        }
 	    }
-	    return newSize > size;
+	    if (newSize == size) {
+	        return false; 
+	    }
+	    System.arraycopy(newArray, 0, array, 0, newSize);
+	    size = newSize; 
+	    return true; 
 	}
+//	   int newSize = size;
+//	    for (int i = size - 1; i >= 0; i--) {
+//	        if (predicate.test(array[i])) {
+//	            remove(i);
+//	        }
+//	    }
+//	    return newSize > size;
+//	}
 	
 
 	@Override
@@ -92,10 +109,9 @@ public class ArrayList<T> implements List<T> {
 		System.arraycopy(array, index, array, index + 1, size - index);
 		array[index] = obj;
 		size++;
-		
-
 	}
 
+	
 	@Override
 	public T get(int index) {
 		indexValidation(index, false);

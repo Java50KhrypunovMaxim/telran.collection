@@ -12,4 +12,21 @@ public interface List<T> extends Collection<T>
  int lastIndexOf(T pattern);
  int indexOf (Predicate<T> predicate);
  int lastIndexOf (Predicate<T> predicate);
+ 
+ @Override
+ default public boolean contains (Object pattern)
+ {
+	 return indexOf((T)pattern) >= 0;
+ }
+ 
+ @Override
+	default public boolean remove(Object pattern) {
+		int index = indexOf((T)pattern);
+		boolean res = false;
+		if (index >= 0) {
+			res = true;
+			remove(index);
+		}
+		return res;
+	}
 }

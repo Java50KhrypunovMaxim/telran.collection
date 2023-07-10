@@ -150,8 +150,7 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public T set(int index, T obj) {
-
-		indexValidation(index, false);
+		indexValidation(index, true);
 		T oldValue = get(index);
 		getNode(index).obj = obj;
 		return oldValue;
@@ -160,10 +159,11 @@ public class LinkedList<T> implements List<T> {
 	@Override
 	public T remove(int index) {
 		indexValidation(index, false);
-		Node<T> node = getNode(index);
-		removeNode(node);
-		return node.obj;
+		Node <T> obj = getNode(index);
+		removeNode(obj);
+		return obj.obj;
 	}
+
 	private void removeNode(Node<T> node) {
 		if (node == head) {
 			removeHead();
@@ -174,32 +174,30 @@ public class LinkedList<T> implements List<T> {
 		}
 		size--;
 	}
-
-		private void removeHead() {
+	private void removeHead() {
 		Node<T> newHead = head.next;
-		if(newHead != null)
+		if (newHead != null)
 		{
 			newHead.prev = null;
 		}
 		head.next = null;
 		head = newHead;
-		
 	}
 
 			private void removeTail() {
 			Node<T> newTail = tail.prev;
-			if (newTail != null) {
+			if(newTail != null)
+			{
 				newTail.next = null;
 			}
 			tail.prev = null;
-			tail = newTail;
-}
+            tail = newTail;   }
 
 		private void removeMiddle(Node<T> node) 
 			{
 			Node<T> beforeNode = node.prev;
 			Node<T> afterNode =  node.next;
-			beforeNode.next = afterNode;
+			beforeNode.next= afterNode;
 			afterNode.prev = beforeNode;
 			node.prev = null;
 			node.next = null;
@@ -223,25 +221,28 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public int indexOf(Predicate<T> predicate) {
+		Node <T> current = head;
 		int index = 0;
-		Node<T> current = head;
-		while (current != null && !predicate.test(current.obj)) {
+		while (current != null && !predicate.test(current.obj))
+		{
 			current = current.next;
 			index++;
 		}
-		return current == null ? -1 : index;
+		return current == null?-1:index;
 	}
 
 	@Override
 	public int lastIndexOf(Predicate<T> predicate) {
-		int index = size - 1;
-		Node<T> current = tail;
-		while (current != null && !predicate.test(current.obj)) {
+		Node <T> current = tail;
+		int index = size-1;
+		while (current != null && !predicate.test(current.obj))
+		{
 			current = current.prev;
 			index--;
 		}
-		return current == null ? -1 : index;
+		return current == null?-1:index;
 	}
+
 
 
 }

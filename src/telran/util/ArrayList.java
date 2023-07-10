@@ -59,7 +59,6 @@ public class ArrayList<T> implements List<T> {
 	}
 	
    @Override
- //TODO try to rewrite method removeIf with complexity O[N]
    public boolean removeIf(Predicate<T> predicate) {
 	   T[] newArray = Arrays.copyOf(array, size);
 	    int newSize = size;
@@ -136,8 +135,9 @@ public class ArrayList<T> implements List<T> {
 		array[size] = null;
 		return res;
 	}
-
-	private void indexValidation(int index, boolean sizeInclusive) {
+	
+	@Override
+	public void indexValidation(int index, boolean sizeInclusive) {
 		int bounder = sizeInclusive ? size : size - 1;
 		if (index < 0 || index > bounder ) {
 			throw new IndexOutOfBoundsException(index);

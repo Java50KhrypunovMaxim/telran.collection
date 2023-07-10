@@ -29,4 +29,13 @@ public interface List<T> extends Collection<T>
 		}
 		return res;
 	}
+ 
+ default public void indexValidation(int index, boolean sizeInclusive) {
+		int size = size();
+	 	int bounder = sizeInclusive ? size : size - 1;
+		if (index < 0 || index > bounder ) {
+			throw new IndexOutOfBoundsException(index);
+		}
 }
+}
+

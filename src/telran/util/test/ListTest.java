@@ -2,118 +2,94 @@ package telran.util.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-import java.util.function.Predicate;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import telran.util.Collection;
-import telran.util.List;
+import telran.util.*;
 
 abstract class ListTest extends CollectionTest {
 
 	List<Integer> list;
 	@BeforeEach
 	@Override
-	void setUp() throws Exception {
+	void setUp() {
 		super.setUp();
 		list = (List<Integer>)collection;
 	}
 
+	
+
 	@Override
 	void addTest() {
-		Integer [] expected = {10,-20, 8, 14, 30, 12, 100, 10};
+		Integer [] expected = {10,  -20, 8, 14, 30, 12, 100, 10};
 		assertTrue(list.add(10));
 		assertArrayEquals(expected, list.toArray(new Integer[0]));
+		
 	}
-
 	@Test
-	void addIndexTest()
-	{
-		Integer [] expected = {10, 10,-20, 8, 14, 30, 12, 100};
+	void addIndexTest() {
+		Integer [] expected1 = {10, 10, -20, 8, 14, 30, 12, 100};
+		Integer [] expected2 = {10, 10, -20, 8, 14, -20, 30, 12, 100};
+		Integer [] expected3 = {10, 10, -20, 8, 14, -20, 30, 12, 100, 10};
 		list.add(0, 10);
-		assertArrayEquals(expected, list.toArray(new Integer[0]));
-	}
-	@Test
-	void indexOfTest()
-	{
-		assertEquals(3, list.indexOf(14));
-		assertEquals(5, list.indexOf(12));
-		assertEquals(-1, list.indexOf(122));
-	}
-	
-	@Test
-	void lastIndexOfTest() // дает последний индекс обьекта который встречается в коллекции
-	{
-		assertTrue(list.add(8));
-		assertEquals(7, list.lastIndexOf(8));
-		assertTrue(list.add(8));
-		assertEquals(8, list.lastIndexOf(8));
-	}
-	
-	@Test
-	void indexOfPredicateTest ()
-	{
-		assertEquals(1, list.indexOf(n->n<=0));
-		assertEquals(-1, list.indexOf(n->n>101));
-		assertEquals(4, list.indexOf(n->n>25));// вернет первое число которое подходит под предикат!!
-		assertEquals(0, list.indexOf(n->n>0));
-		assertEquals(-1, list.indexOf(n->n%2!=0));
-	}
-	
-	@Test
-	void lastIndexOfPredicateTest() 
-	{
-		assertEquals(6, list.lastIndexOf(n->n%2==0));
-		assertEquals(-1, list.lastIndexOf(n->n%2!=0));
-		assertEquals(4, list.lastIndexOf(n-> n<40 && n>20 ));
-	}
-	
-	@Test
-	void getTest() 
-	{
-		assertEquals(100, list.get(6));
-		assertEquals(-20, list.get(1));
-		assertThrows(IndexOutOfBoundsException.class,  () -> { list.get(33); });
-	}
-	
-	@Test
-	void setTest() 
-	{
-		Integer [] expected = {1,-20, 8, 14, 30, 12, 100};
-		Integer [] expected2 = {1,-20, 8, 17, 30, 12, 100};// меняет обьет по индексу в массиве
-		list.set(0, 1);
-		assertArrayEquals(expected, list.toArray(new Integer[0]));
-		list.set(3, 17);
+		assertArrayEquals(expected1, list.toArray(new Integer[0]));
+		list.add(5, -20);
 		assertArrayEquals(expected2, list.toArray(new Integer[0]));
-		assertThrows(IndexOutOfBoundsException.class,  () -> { list.set(-3, 17); });
+		list.add(9, 10);
+		assertArrayEquals(expected3, list.toArray(new Integer[0]));
+		assertThrows(IndexOutOfBoundsException.class, () -> list.add(11, 10));
+		assertThrows(IndexOutOfBoundsException.class, () -> list.add(-1, 10));
 	}
-	
 	@Test
-	void removeByIndexTest() 
-	{
-		Integer [] expected = {10, -20, 30, 12, 100};
-		list.remove(2);
-		list.remove(2);
-		assertArrayEquals(expected, list.toArray(new Integer[0]));
-		assertThrows(IndexOutOfBoundsException.class,  () -> { list.remove(-1); });
+	void getIndexTest() {
+		for (int i = 0; i < numbers.length; i++) {
+			assertEquals(numbers[i], list.get(i));
+		}
+		assertThrows(IndexOutOfBoundsException.class, () -> list.get(list.size()));
+		assertThrows(IndexOutOfBoundsException.class, () -> list.get(-1));
 	}
-	
 	@Test
-	void removeByPaternTest() 
-	{
-		Integer [] expected = {10,-20, 8, 14, 12, 100};
+	void indexOfTest() {
+		assertEquals(4, list.indexOf(n -> n >= 30));
+		assertEquals(6, list.lastIndexOf(n -> n >= 30));
+		assertEquals(-1, list.indexOf(n -> n % 2 != 0));
+		assertEquals(-1, list.lastIndexOf(n -> n % 2 != 0));
+		list.add(5, 10);
+		assertEquals(0, list.indexOf(10));
+		assertEquals(5, list.lastIndexOf(10));
+		
+	}
+	@Test
+	void removeIndex() {
+		Integer [] expected1 = { -20, 8, 14, 30, 12, 100};
+		Integer [] expected2 = { -20, 8, 30, 12, 100};
+		Integer [] expected3 = { -20, 8,  30, 12};
+		list.remove(0);
+		assertArrayEquals(expected1, list.toArray(new Integer[0]));
+		list.remove(2);
+		assertArrayEquals(expected2, list.toArray(new Integer[0]));
 		list.remove(4);
-		assertArrayEquals(expected, list.toArray(new Integer[0]));
+		assertArrayEquals(expected3, list.toArray(new Integer[0]));
+		assertThrows(IndexOutOfBoundsException.class, () -> list.remove(4));
+		assertThrows(IndexOutOfBoundsException.class, () -> list.remove(-1));
+	}
+	@Test
+	void setTest() {
+		Integer [] expected1 = { 10, -20, 7, 14, 30, 12, 100};
+		list.set(2, 7);
+		assertArrayEquals(expected1, list.toArray(new Integer[0]));
+		assertEquals(10, list.get(0));
+		list.set(0, 33);
+		assertEquals(33, list.get(0));
+		assertThrows(IndexOutOfBoundsException.class, () -> list.set(list.size(), 3));
+		assertThrows(IndexOutOfBoundsException.class, () -> list.set(-1, 3));
+	}
+	@Override 
+	protected void runArrayTest(Integer[] expected, Integer[] actual) {
+		assertArrayEquals(expected, actual);
 	}
 	
-	@Test
-	void containtListTest() 
-	{
-		assertTrue(list.contains(100));
-		assertFalse(list.contains(110));
-	}
+
 	
 
 }

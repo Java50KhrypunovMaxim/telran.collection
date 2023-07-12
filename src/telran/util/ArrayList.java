@@ -60,31 +60,23 @@ public class ArrayList<T> implements List<T> {
 	
    @Override
    public boolean removeIf(Predicate<T> predicate) {
-	   T[] newArray = Arrays.copyOf(array, size);
-	    int newSize = size;
-	    int index = 0; 
-	    for (int i = 0; i < size; i++) {
-	        if (!predicate.test(array[i])) {
-	            newArray[index++] = array[i]; 
-	        } else {
-	            newSize--; 
-	        }
-	    }
-	    if (newSize == size) {
-	        return false; 
-	    }
-	    System.arraycopy(newArray, 0, array, 0, newSize);
-	    size = newSize; 
-	    return true; 
-	}
-//	   int newSize = size;
-//	    for (int i = size - 1; i >= 0; i--) {
-//	        if (predicate.test(array[i])) {
-//	            remove(i);
-//	        }
-//	    }
-//	    return newSize > size;
-//	}
+	   int oldSize = size;
+		int indexDest = 0;
+		for(int indexSrc = 0; indexSrc < oldSize; indexSrc++) {
+			if (predicate.test(array[indexSrc])) {
+				size--;
+			} else {
+				array[indexDest++] = array[indexSrc];
+			}
+		}
+		for (int i = size; i < oldSize; i++) {
+			array[i] = null;
+		}
+		return oldSize > size;
+	  
+   }
+	
+
 	
 
 	@Override
@@ -92,6 +84,10 @@ public class ArrayList<T> implements List<T> {
 		
 		return size;
 	}
+
+	
+
+	
 
 	@Override
 	public Iterator<T> iterator() {
@@ -108,9 +104,10 @@ public class ArrayList<T> implements List<T> {
 		System.arraycopy(array, index, array, index + 1, size - index);
 		array[index] = obj;
 		size++;
+		
+
 	}
 
-	
 	@Override
 	public T get(int index) {
 		indexValidation(index, false);
@@ -135,26 +132,9 @@ public class ArrayList<T> implements List<T> {
 		array[size] = null;
 		return res;
 	}
-	
-	@Override
-	public void indexValidation(int index, boolean sizeInclusive) {
-		int bounder = sizeInclusive ? size : size - 1;
-		if (index < 0 || index > bounder ) {
-			throw new IndexOutOfBoundsException(index);
-		}
-		
-	}
-	@Override
-	public int indexOf(Object pattern) {
-		
-		return indexOf(Predicate.isEqual(pattern));
-	}
 
-	@Override
-	public int lastIndexOf(Object pattern) {
-		
-		return lastIndexOf(Predicate.isEqual(pattern));
-	}
+	
+	
 
 	@Override
 	public int indexOf(Predicate<T> predicate) {
@@ -168,8 +148,6 @@ public class ArrayList<T> implements List<T> {
 		}
 		return res;
 	}
-	
-	
 
 	@Override
 	public int lastIndexOf(Predicate<T> predicate) {

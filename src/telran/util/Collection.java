@@ -4,50 +4,23 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
-public interface Collection<T> extends Iterable <T>
-{
-	boolean add (T obj);
+public interface Collection<T> extends Iterable<T>{
+	boolean add(T obj);
 	boolean remove(Object pattern);
-	int size();
-	
-	default void clear()
-	{
-		removeIf(n->true);
+	default void clear() {
+		removeIf(n -> true);
 	}
-	
-	
 	boolean contains (Object pattern);
-	
-	default boolean containsAll (Collection<T>collection) 
-	{	
+	default boolean containsAll(Collection<T> collection) {
 		boolean res = true;
 		Iterator<T> it = collection.iterator();
-		while (it.hasNext() && res)
-		{
+		while (it.hasNext() && res) {
 			T obj = it.next();
 			res = contains(obj);
 		}
 		return res;
-		
 	}
-	
-	default public boolean removeAll(Collection<T> collection) {
-		int oldSize = size();
-		for(T obj: collection) {
-			remove(obj);
-		}
-		return oldSize > size();
-	}
-
-	default public boolean addAll(Collection<T> collection) {
-		int oldSize = size();
-		for(T obj: collection) {
-			add(obj);
-		}
-		return oldSize < size();
-	}
-	
-	default public T[] toArray(T[] ar) {
+	default  T[] toArray(T[] ar) {
 		int size = size();
 		T[] res = ar.length < size ? Arrays.copyOf(ar, size) : ar;
 		int index = 0;
@@ -70,5 +43,20 @@ public interface Collection<T> extends Iterable <T>
 		}
 		return oldSize > size();
 	}
-
+	int size();
+	default public boolean addAll(Collection<T> collection) {
+		int oldSize = size();
+		for(T obj: collection) {
+			add(obj);
+		}
+		return oldSize < size();
+	}
+	
+	default public boolean removeAll(Collection<T> collection) {
+		int oldSize = size();
+		for(T obj: collection) {
+			remove(obj);
+		}
+		return oldSize > size();
+	}
 }

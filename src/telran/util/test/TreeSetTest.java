@@ -1,0 +1,98 @@
+package telran.util.test;
+
+import telran.collection.ArrayList;
+import telran.collection.Collection;
+import telran.collection.List;
+import telran.collection.TreeSet;
+import telran.util.*;
+
+import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+
+
+public class TreeSetTest extends SortedSetTest {
+	TreeSet<Integer> treeSet;
+	@BeforeEach
+	@Override
+	void setUp() {
+		collection = new TreeSet<>();
+		super.setUp();
+		treeSet = (TreeSet<Integer>) collection;
+	}
+
+	@Override
+	protected Collection<Integer> getCollection(Integer[] ar) {
+		TreeSet<Integer> res = new TreeSet<>();
+		for(Integer num: ar) {
+			res.add(num);
+		}
+		return res;
+	}
+	@Test
+	void displayRotatedTest() {
+		treeSet.setSpacesPerLevel(4);
+		treeSet.displayRotated();
+	}
+	@Test
+	void widthTest() {
+		assertEquals(3, treeSet.width());
+	}
+	@Test
+	void heightTest() {
+		assertEquals(4, treeSet.height());
+	}
+	@Test
+	void balanceTest() {
+		treeSet.balance();
+		assertEquals(4, treeSet.width());
+		assertEquals(3, treeSet.height());
+	}
+	@Test
+	void balanceTestArray() {
+		Integer[] array = new Integer[1023];
+		for(int i = 0; i < array.length; i++) {
+			array[i] = i;
+		}
+		reorderArray(array);
+		TreeSet<Integer> tree = new TreeSet<>();
+		for(Integer num: array) {
+			tree.add(num);
+		}
+		assertEquals(512, tree.width());
+	}
+
+	private void reorderArray(Integer[] array) {
+		List<Integer> list = new ArrayList<>();
+		reorderArray(array, 0, array.length - 1, list);
+		int index = 0;
+		for(int num: list) {
+			array[index++] = num;
+		}
+		
+		
+	}
+	private void reorderArray(Integer[] array, int left, int right,
+			List<Integer> list) {
+		if(left <= right) {
+			int middle = (left + right) / 2;
+			list.add(array[middle]);
+			reorderArray(array, left, middle - 1, list);
+			reorderArray(array, middle + 1, right, list);
+		}
+		
+	}
+	@Test
+	void inverseTest() {
+		Integer[] expected = {100, 30, 14, 12, 10, 8, -20   };
+		treeSet.inverse();
+		treeSet.setSpacesPerLevel(4);
+		treeSet.displayRotated();
+		assertArrayEquals(expected, treeSet.toArray(new Integer[0]));
+		assertTrue(treeSet.contains(100));
+	}
+	
+
+}

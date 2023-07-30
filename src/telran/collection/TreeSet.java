@@ -3,7 +3,6 @@ package telran.collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-@SuppressWarnings("unchecked")
 public class TreeSet<T> implements SortedSet<T> {
 private static class Node<T> {
 	T obj;

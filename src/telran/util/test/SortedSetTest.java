@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import telran.collection.SortedSet;
 
-//Integer [] numbers = {10, -20, 8, 14, 30, 12, 100};
 public abstract class SortedSetTest extends SetTest {
 	SortedSet<Integer> sortedSet;
 	@BeforeEach

@@ -26,7 +26,7 @@ static public String arithmeticExpression()
 {
 	String operator = operator();
 	String operand = operand();
-	return String.format("\\s*(%s)*(%s%s)*\\s*",operand, operator, operand);
+	return String.format("\\s*(%s)+(%s)*(%s%s)*\\s*",operand,operand, operator, operand);
 }
 public static String operator()
 {

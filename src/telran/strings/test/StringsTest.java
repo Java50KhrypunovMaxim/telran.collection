@@ -3,6 +3,9 @@ package telran.strings.test;
 import static org.junit.jupiter.api.Assertions.*;
 import static telran.strings.Strings.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 
@@ -101,22 +104,49 @@ class StringsTest {
 	}
 	@Test
 	void arithmeticExpressionTrueTest() {
-	String regex = arithmeticExpression();
-	assertTrue("1.5 + a/2*10 -21".matches(regex));
-	assertTrue(" .5 + $/2* 10.0 /21.1234".matches(regex));
-	assertTrue("5. + __/2* 0.0 /0 ".matches(regex));
-	assertTrue("25.".matches(regex));
-	assertTrue(" aA123 ".matches(regex));
+		String regex = arithmeticExpression();
+		assertTrue("1.5 + a/2*10 -21".matches(regex));
+		assertTrue(" .5 + $/2* 10.0 /21.1234".matches(regex));
+		assertTrue("5. + __/2* 0.0 /0  ".matches(regex));
+		assertTrue("25.".matches(regex));
+		assertTrue("   aA123   ".matches(regex));
 	}
-	
 	@Test
 	void arithmeticExpressionFalseTest() {
-	String regex = arithmeticExpression();
-	assertFalse("1.5#a/2*10-21".matches(regex));
-	assertFalse(".5+$ 1/2* 10.0 /21.1234".matches(regex));
-	assertFalse("5.+_/2*0.0/0".matches(regex));
-	assertFalse("25 .".matches(regex));
-	assertFalse("aA123*".matches(regex));
-	assertFalse(" + a * b".matches(regex));
+		String regex = arithmeticExpression();
+		assertFalse("1.5 # a/2*10 -21".matches(regex));
+		assertFalse(".5 + $ 1/2* 10.0 /21.1234".matches(regex));
+		assertFalse("5. + _/2* 0.0 /0".matches(regex));
+		assertFalse("25 .".matches(regex));
+		assertFalse("aA123*".matches(regex));
+		assertFalse(" + a * b".matches(regex));
 	}
+	@Test
+	void isArithmeticExpressionTrueTest() {
+	assertTrue(isArithmericExpression("(a + (b /2) ) * 100"));
+	assertTrue(isArithmericExpression("(a + ( (b /2)  * 100)- 10)"));
+	assertTrue(isArithmericExpression("( a +  ( b /2 ) ) * 100"));
+	
+
+}
+	@Test
+	void isArithmeticExpressionFalseTest() {
+	assertFalse(isArithmericExpression("(a + ((b /2) ( * 100)- 10))"));
+	assertFalse(isArithmericExpression("(a + ((b /2)  * 100)- 10)))"));
+	assertFalse(isArithmericExpression("(a + ((b)))) /2)  * 100)- ((10))"));
+}
+	@Test
+	void calculationTest()
+	{
+		Map<String,Double> variableValues = new HashMap();
+		variableValues.put("a", 2.0);
+		variableValues.put("b", 4.0);
+		variableValues.put("x", 3.0);
+		assertEquals(calculation("( a +  ( b /2 ) ) * 100",variableValues),300);
+		assertEquals(calculation("( x + a + 100 + ( b /2 ) ) - 100",variableValues),-45.5);
+		assertEquals(calculation("( x + a + b * 100)",variableValues),900);
+		assertThrows(NoSuchElementException.class, () -> calculation("( a +  ( c / 2 ) ) * 100", variableValues));
+	}
+	
+	
 }
